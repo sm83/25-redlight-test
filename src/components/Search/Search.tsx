@@ -11,7 +11,25 @@ import {
 } from '../../store/sessionSlice';
 // import { addToSelected } from '../../store/sessionSlice';
 
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 const Search = () => {
+  const searchParams = useParams();
+
+  const navigate = useNavigate();
+
+  console.log(searchParams);
+
+  useEffect(() => {
+    const searchValueFull = searchParams?.['*'] || '';
+    const searchValue = searchValueFull.split('/')?.[1];
+
+    if (searchValue) {
+      dispatch(updateSearchField(searchValue));
+    }
+  }, []);
+
   const dispatch = useAppDispatch();
 
   const handleAllSet = () => {
@@ -27,6 +45,7 @@ const Search = () => {
   const handleSearchInput = (e: any) => {
     // setSearchField(e.target.value);
     dispatch(updateSearchField(e.target.value));
+    navigate(`/search/${e.target.value}`);
   };
 
   const mode = useAppSelector((state) => state.session.postsDisplayMode);
